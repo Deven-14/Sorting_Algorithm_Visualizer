@@ -1,50 +1,58 @@
 package input;
 
+import java.lang.Math;
+
 public interface RandomValue<T>
 {
     T getRandomValue();
 }
 
-/*class ConvertDoubleToInteger implements ConvertRandomDoubleTo<Integer>//default class
+class RandomInteger implements RandomValue<Integer>//default class
 {
-    public Integer convert(Double data)
+    public Integer getRandomValue()
     {
+        Double data = Math.random() * 100;
         return data.intValue();
     }
 }
 
-class ConvertDoubleToFloat implements ConvertRandomDoubleTo<Float>//default class
+class RandomFloat implements RandomValue<Float>//default class
 {
-    public Float convert(Double data)
+    public Float getRandomValue()
     {
+        Double data = Math.random() * 100;
         return data.floatValue();
     }
 }
 
-class ConvertDoubleToDouble implements ConvertRandomDoubleTo<Double>//default class
+class RandomDouble implements RandomValue<Double>//default class
 {
-    public Double convert(Double data)
+    public Double getRandomValue()
     {
+        Double data = Math.random() * 100;
         return data.doubleValue();
     }
 }
 
-class ConvertDoubleToCharacter implements ConvertRandomDoubleTo<Character>//default class
+class RandomCharacter implements RandomValue<Character>//default class
 {
-    public Character convert(Double data)
+    public Character getRandomValue()
     {
+        Double data = Math.random() * 100;
         return (char)((int)(97 + (data % 26)));
     }
 }
 
-class ConvertDoubleToString implements ConvertRandomDoubleTo<String>//default class
+class RandomString implements RandomValue<String>//default class
 {
-    public String convert(Double data)
+    public String getRandomValue()
     {
-        char c1 = (char)((int)(97 + (data % 26)));
-        char c2 = (char)((int)(97 + (data % 23)));
-        char c3 = (char)((int)(97 + (data % 21)));
-        char[] s = {c1, c2, c3};
-        return new String(s);
+        int n = (int)(Math.random() * 10);
+        char[] str = new char[n];
+
+        for(int i = 0; i < n; ++i)
+            str[i] = (char)((int)(97 + ((Math.random() * 100) % 26)));
+            
+        return new String(str);
     }
-}*/
+}
