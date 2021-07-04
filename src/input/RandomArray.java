@@ -57,6 +57,13 @@ public class RandomArray<T> {
         for(String n6 : s)
             System.out.print(n6 +", ");
         System.out.println();
+
+        Student[] s2 = new Student[20];
+        RandomArray<Student> n7 = new RandomArray<Student>(new RandomStudent());
+        n7.generateRandomArray(s2);
+        for(Student n8 : s2)
+            System.out.print(n8 +", ");
+        System.out.println();
     }
 
 }
