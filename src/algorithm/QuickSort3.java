@@ -16,10 +16,7 @@ class Pair
 
 public class QuickSort3<T extends Comparable<T>> extends QuickSort<T>{
    
-    public QuickSort3(T[] list)
-    {
-        super(list);
-    }
+    public QuickSort3(T[] list) { }
 
     private Pair parition(int left, int right)
     {
@@ -77,18 +74,12 @@ public class QuickSort3<T extends Comparable<T>> extends QuickSort<T>{
         }
     }
 
-    public void sort()
+    public void sort(T[] Array)
     {
+        this.list = Array;
+        this.size = list.length;
+
         sort(0, size - 1);
     }
 
-    public static void main(String[] args)
-    {
-        Integer[] a = {6, 6, 3, 1, 2, 5, 3, 2, 6, 9, 8, 0};
-        QuickSort3<Integer> b = new QuickSort3<Integer>(a);
-        b.sort();
-        for(Integer x : a)
-            System.out.print(x + ", ");
-        System.out.println();
-    }
 }

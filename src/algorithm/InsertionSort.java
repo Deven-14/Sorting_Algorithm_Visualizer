@@ -2,13 +2,13 @@ package algorithm;
 
 public class InsertionSort<T extends Comparable<T>> extends Sort<T> {
 
-    public InsertionSort(T[] list)
-    {
-        super(list);
-    }
+    public InsertionSort() { }
 
-    public void sort()
+    public void sort(T[] Array)
     {
+        this.list = Array;
+        this.size = list.length;
+        
         T key;
         int j;
         for(int i = 1; i < size; ++i)
@@ -26,13 +26,4 @@ public class InsertionSort<T extends Comparable<T>> extends Sort<T> {
         }
     }
 
-    public static void main(String[] args)
-    {
-        Integer[] a = {5, 6, 3, 1, 2, 6};
-        InsertionSort<Integer> b = new InsertionSort<Integer>(a);
-        b.sort();
-        for(Integer x : a)
-            System.out.print(x + ", ");
-        System.out.println();
-    }
 }

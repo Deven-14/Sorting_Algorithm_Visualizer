@@ -2,10 +2,7 @@ package algorithm;
 
 public class MergeSort<T extends Comparable<T>> extends Sort<T>{
     
-    public MergeSort(T[] list)
-    {
-        super(list);
-    }
+    public MergeSort() { }
 
     @SuppressWarnings("unchecked")
     private void merge(int left, int mid, int right)
@@ -52,18 +49,12 @@ public class MergeSort<T extends Comparable<T>> extends Sort<T>{
         merge(left, mid, right);
     }
 
-    public void sort()
+    public void sort(T[] Array)
     {
+        this.list = Array;
+        this.size = list.length;
+
         sort(0, size - 1);
     }
 
-    public static void main(String[] args)
-    {
-        Integer[] a = {5, 6, 3, 1, 2, 6};
-        MergeSort<Integer> b = new MergeSort<Integer>(a);
-        b.sort();
-        for(Integer x : a)
-            System.out.print(x + ", ");
-        System.out.println();
-    }
 }

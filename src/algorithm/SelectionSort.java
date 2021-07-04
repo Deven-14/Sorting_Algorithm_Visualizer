@@ -2,13 +2,13 @@ package algorithm;
 
 public class SelectionSort<T extends Comparable<T>> extends Sort<T> {
 
-    public SelectionSort(T[] list)
-    {
-        super(list);
-    }
+    public SelectionSort() { }
 
-    public void sort()
+    public void sort(T[] Array)
     {
+        this.list = Array;
+        this.size = list.length;
+        
         int minIndex;
 
         for(int i = 0; i < size - 1; ++i)
@@ -26,13 +26,4 @@ public class SelectionSort<T extends Comparable<T>> extends Sort<T> {
         }
     }
 
-    public static void main(String[] args)
-    {
-        Integer[] a = {5, 6, 3, 1, 2, 6};
-        SelectionSort<Integer> b = new SelectionSort<Integer>(a);
-        b.sort();
-        for(Integer x : a)
-            System.out.print(x + ", ");
-        System.out.println();
-    }
 }

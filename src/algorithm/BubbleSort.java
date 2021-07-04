@@ -2,13 +2,13 @@ package algorithm;
 
 public class BubbleSort<T extends Comparable<T>> extends Sort<T>
 {
-    public BubbleSort(T[] list)
-    {
-        super(list);
-    }
+    public BubbleSort() { }
 
-    public void sort()
+    public void sort(T[] Array)
     {
+        this.list = Array;
+        this.size = list.length;
+
         for(int i = 0; i < size - 1; ++i)
         {
             for(int j = 0; j < size - 1 - i; ++j)
@@ -21,14 +21,5 @@ public class BubbleSort<T extends Comparable<T>> extends Sort<T>
             }
         }
     }
-
-    public static void main(String[] args)
-    {
-        Integer[] a = {5, 6, 3, 1, 2, 6};
-        BubbleSort<Integer> b = new BubbleSort<Integer>(a);
-        b.sort();
-        for(Integer x : a)
-            System.out.print(x + ", ");
-        System.out.println();
-    }
+    
 }

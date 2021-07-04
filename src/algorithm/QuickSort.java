@@ -2,10 +2,7 @@ package algorithm;
 
 public class QuickSort<T extends Comparable<T>> extends Sort<T>{
     
-    public QuickSort(T[] list)
-    {
-        super(list);
-    }
+    public QuickSort() { }
 
     private int parition(int left, int right)
     {
@@ -61,18 +58,12 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T>{
         }
     }
 
-    public void sort()
+    public void sort(T[] Array)
     {
+        this.list = Array;
+        this.size = list.length;
+
         sort(0, size - 1);
     }
 
-    public static void main(String[] args)
-    {
-        Integer[] a = {5, 6, 3, 1, 2, 6};
-        QuickSort<Integer> b = new QuickSort<Integer>(a);
-        b.sort();
-        for(Integer x : a)
-            System.out.print(x + ", ");
-        System.out.println();
-    }
 }

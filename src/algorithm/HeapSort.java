@@ -1,11 +1,8 @@
 package algorithm;
 
 public class HeapSort<T extends Comparable<T>> extends Sort<T>{
-    
-    public HeapSort(T[] list)
-    {
-        super(list);
-    }
+
+    public HeapSort() { }
 
     private void heapify(int nNodes, int parentIndex)
     {
@@ -45,19 +42,13 @@ public class HeapSort<T extends Comparable<T>> extends Sort<T>{
         }
     }
 
-    public void sort()
+    public void sort(T[] Array)
     {
+        this.list = Array;
+        this.size = list.length;
+
         createMaxHeap();
         maxDeletions();
     }
 
-    public static void main(String[] args)
-    {
-        Integer[] a = {5, 6, 3, 1, 2, 6};
-        HeapSort<Integer> b = new HeapSort<Integer>(a);
-        b.sort();
-        for(Integer x : a)
-            System.out.print(x + ", ");
-        System.out.println();
-    }
 }
