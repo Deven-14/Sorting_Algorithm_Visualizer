@@ -1,14 +1,10 @@
 package algorithm;
 
-public class InsertionSort<T extends Comparable<T>> {
-
-    private T[] list;
-    private int size;
+public class InsertionSort<T extends Comparable<T>> extends Sort<T> {
 
     public InsertionSort(T[] list)
     {
-        this.list = list;
-        size = list.length;
+        super(list);
     }
 
     public void sort()

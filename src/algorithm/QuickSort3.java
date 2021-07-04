@@ -1,7 +1,5 @@
 package algorithm;
 
-import java.lang.Math;
-
 class Pair
 {
     int first;//default type
@@ -16,27 +14,11 @@ class Pair
     }
 }
 
-public class QuickSort3<T extends Comparable<T>> {
-    
-    private T[] list;
-    private int size;
-
+public class QuickSort3<T extends Comparable<T>> extends QuickSort<T>{
+   
     public QuickSort3(T[] list)
     {
-        this.list = list;
-        size = list.length;
-    }
-
-    private void swap(int index1, int index2)
-    {
-        T temp = list[index1];
-        list[index1] = list[index2];
-        list[index2] = temp;
-    }
-
-    private int random(int left, int right)
-    {
-        return left + (int)Math.random() % (right - left + 1);
+        super(list);
     }
 
     private Pair parition(int left, int right)

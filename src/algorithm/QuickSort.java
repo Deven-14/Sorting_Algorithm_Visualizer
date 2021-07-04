@@ -1,21 +1,10 @@
 package algorithm;
 
-public class QuickSort<T extends Comparable<T>> {
+public class QuickSort<T extends Comparable<T>> extends Sort<T>{
     
-    private T[] list;
-    private int size;
-
     public QuickSort(T[] list)
     {
-        this.list = list;
-        size = list.length;
-    }
-
-    private void swap(int index1, int index2)
-    {
-        T temp = list[index1];
-        list[index1] = list[index2];
-        list[index2] = temp;
+        super(list);
     }
 
     private int parition(int left, int right)
@@ -44,7 +33,7 @@ public class QuickSort<T extends Comparable<T>> {
         return right;
     }
 
-    private int random(int left, int right)
+    protected int random(int left, int right)
     {
         return left + (int)Math.random() % (right - left + 1);
     }

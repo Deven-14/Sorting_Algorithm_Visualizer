@@ -1,14 +1,10 @@
 package algorithm;
 
-public class MergeSort<T extends Comparable<T>> {
-        
-    private T[] list;
-    private int size;
-
+public class MergeSort<T extends Comparable<T>> extends Sort<T>{
+    
     public MergeSort(T[] list)
     {
-        this.list = list;
-        size = list.length;
+        super(list);
     }
 
     @SuppressWarnings("unchecked")

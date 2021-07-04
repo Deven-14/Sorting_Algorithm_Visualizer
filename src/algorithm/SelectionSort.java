@@ -1,21 +1,10 @@
 package algorithm;
 
-public class SelectionSort<T extends Comparable<T>> {
-
-    private T[] list;
-    private int size;
+public class SelectionSort<T extends Comparable<T>> extends Sort<T> {
 
     public SelectionSort(T[] list)
     {
-        this.list = list;
-        size = list.length;
-    }
-
-    private void swap(int index1, int index2)
-    {
-        T temp = list[index1];
-        list[index1] = list[index2];
-        list[index2] = temp;
+        super(list);
     }
 
     public void sort()
