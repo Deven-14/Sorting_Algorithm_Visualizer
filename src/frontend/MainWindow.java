@@ -1,6 +1,5 @@
 package frontend;
 
-import frontend.BubbleSortVisualizer;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -15,6 +14,8 @@ import java.awt.Dimension;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import datastructure.Sync;
 
 public class MainWindow extends JFrame implements ActionListener {
    final int WIDTH = 1000;
@@ -37,12 +38,15 @@ public class MainWindow extends JFrame implements ActionListener {
    JLabel algoLabel;
    JLabel rangeLabel;
    Container contentPane;
+
+   Integer[] heights;
    
 
-   MainWindow (String title) {
+   public MainWindow (String title, Sync sync, Integer[] h) {
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       this.setTitle(title);
       this.setSize(WIDTH, HEIGHT);
+      heights = h;
       
       menuBar = new JMenuBar();
       aboutMenu = new JMenu("About");
@@ -93,8 +97,9 @@ public class MainWindow extends JFrame implements ActionListener {
       sidePanel.setPreferredSize(new Dimension(200, 200));
       sidePanel.setBackground(Color.white);
       
-      int [] heights = {40, 70, 90, 20, 10, 60, 5};
-      mainPanel = new BubbleSortVisualizer(heights);
+     // Integer[] heights = {40, 70, 90, 20, 10, 60, 5};
+      //mainPanel = new BubbleSortVisualizer(heights);
+      mainPanel = new VisualizerPanel(heights, sync);
       // mainPanel.setPreferredSize(new Dimension(500, 500)); // 800, 800 * 9 / 16
       
       getContentPane().add(toolBarPanel, BorderLayout.NORTH);
@@ -107,7 +112,7 @@ public class MainWindow extends JFrame implements ActionListener {
    @Override
    public void actionPerformed (ActionEvent e) {
        // System.out.println(((ComboItem)rangeSelection.getSelectedItem()).getValue());
-       mainPanel.maxBarHeight = ((ComboBoxItem)rangeSelection.getSelectedItem()).getValue();
-       repaint();
+       //mainPanel.maxBarHeight = ((ComboBoxItem)rangeSelection.getSelectedItem()).getValue();
+       //repaint();
    }
 }

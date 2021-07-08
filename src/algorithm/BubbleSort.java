@@ -1,8 +1,11 @@
 package algorithm;
 
+import datastructure.Sync;
+import datastructure.Pair;
+
 public class BubbleSort<T extends Comparable<T>> extends Sort<T>
 {
-    public BubbleSort() { }
+    public BubbleSort(Sync s) { super(s); }
 
     public void sort(T[] Array)
     {
@@ -16,10 +19,18 @@ public class BubbleSort<T extends Comparable<T>> extends Sort<T>
                 if(list[j].compareTo(list[j+1]) > 0)
                 {
                     //swap(list[j], list[j+1]); not possible as Integer, String etc are immutable objects, but if T was of user defined type like student then this would work
-                    swap(j, j + 1);
+                    sync.send(new Pair(j, j+1), (indexPair) -> swap(indexPair.first, indexPair.second));//or using runnable method, sync Pair p = Pair(j, j+1); send(p, () -> swap(p.first, p.second));
+                    // try{
+                    //     Thread.sleep(500);
+                    // }catch(InterruptedException e)
+                    // {
+                    //     System.out.println(e);
+                    // }
                 }
             }
         }
+
+        sync.isCompleted = true;
     }
     
 }

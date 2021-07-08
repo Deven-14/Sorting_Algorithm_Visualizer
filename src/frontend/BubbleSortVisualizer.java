@@ -3,12 +3,16 @@ package frontend;
 import javax.swing.SwingWorker;
 
 public class BubbleSortVisualizer extends VisualizerPanel{
+
     public SwingWorker<Void, Void> sort;
+
     public BubbleSortVisualizer(int [] barHeights) { // generics
+        
         super(barHeights);
         startSort();
         
     }
+    
     public void swap (int index1, int index2) {
         int temp = barHeights[index1];
         barHeights[index1] = barHeights[index2];
