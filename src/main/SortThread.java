@@ -9,7 +9,7 @@ public class SortThread<T> implements Runnable{
     Sort<T> sortAlgorithm;
     T[] list;
 
-    SortThread(Sort<T> s, T[] list)
+    public SortThread(Sort<T> s, T[] list)
     {
         sortAlgorithm = s;
         this.list = list;

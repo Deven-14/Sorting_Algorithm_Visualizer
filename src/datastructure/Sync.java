@@ -61,14 +61,14 @@ public class Sync {
         {
             try{
                 wait();
-                System.out.println("h1");
+                //System.out.println("h1");
             }catch(InterruptedException e)
             {
                 System.out.println("Interrupt caught in receive()");
             }
         }
         transfer = true;
-        System.out.println("h2");
+        //System.out.println("h2");
 
         callback.accept(comparedIndices);
 

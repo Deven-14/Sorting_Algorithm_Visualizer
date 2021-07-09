@@ -42,11 +42,12 @@ public class MainWindow extends JFrame implements ActionListener {
    Integer[] heights;
    
 
-   public MainWindow (String title, Sync sync, Integer[] h) {
+    public MainWindow (String title)//, Sync sync, Integer[] h) {
+    {
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       this.setTitle(title);
       this.setSize(WIDTH, HEIGHT);
-      heights = h;
+      //heights = h;
       
       menuBar = new JMenuBar();
       aboutMenu = new JMenu("About");
@@ -97,9 +98,9 @@ public class MainWindow extends JFrame implements ActionListener {
       sidePanel.setPreferredSize(new Dimension(200, 200));
       sidePanel.setBackground(Color.white);
       
-     // Integer[] heights = {40, 70, 90, 20, 10, 60, 5};
+      Integer[] heights = {40, 70, 90, 20, 10, 60, 5};
       //mainPanel = new BubbleSortVisualizer(heights);
-      mainPanel = new VisualizerPanel(heights, sync);
+      mainPanel = new VisualizerPanel(heights);//, sync);
       // mainPanel.setPreferredSize(new Dimension(500, 500)); // 800, 800 * 9 / 16
       
       getContentPane().add(toolBarPanel, BorderLayout.NORTH);
