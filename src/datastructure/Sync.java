@@ -49,7 +49,7 @@ public class Sync {
     }
 
 
-    public synchronized void receive(Consumer<Pair> callback)
+    public synchronized Pair receive(Consumer<Pair> callback)
     {
         // if(!isReady)
         // {
@@ -73,7 +73,7 @@ public class Sync {
         callback.accept(comparedIndices);
 
         notify();
-        //return (new Pair(comparedIndices.first, comparedIndices.second));
+        return (new Pair(comparedIndices.first, comparedIndices.second));
     }
 
 }

@@ -30,12 +30,15 @@ class VisualizerPanel extends JPanel implements ActionListener{
 
     int c;
 
-    int[][] bh;
-    int[] h;
+    Integer[][] bh;
     Integer x1, x2;
+
+    Integer rect_width;
 
     Timer timer;
     Timer timer2;
+
+    Thread t1;
 
     VisualizerPanel (Integer[] barHeights)//, Sync sync) {
     {
@@ -50,27 +53,47 @@ class VisualizerPanel extends JPanel implements ActionListener{
         SortAnElement sortEle = new SortAnElement();
 
         button = new JButton("Start");
-        button.addActionListener(startSort);
+        button.addActionListener(e -> { t1.start(); timer.start(); });
 
-        timer = new Timer(1000, sortEle);
+        rect_width = PANEL_WIDTH / barHeights.length;
+
+        timer = new Timer(1000, e -> {
+            comparedIndices = sync.receive((indexPiar) -> { 
+                swap(indexPiar.first, indexPiar.second);
+                System.out.println(indexPiar.first + ", " + indexPiar.second);
+                repaint();
+            } );
+            if(sync.isCompleted)
+            {
+                timer.stop();// thread.join also do.
+                for(Integer a : barHeights)
+                    System.out.print(a + " ");
+                System.out.println();
+            }
+            System.out.println(c);
+        });
         
         this.add(button);
 
         c = 0;
 
-        bh = new int[barHeights.length][4];
-        h = new int[barHeights.length];
-        int rect_width = PANEL_WIDTH / barHeights.length;
+        bh = new Integer[barHeights.length][4];
+        
 
         for (int i = 0; i < barHeights.length; i++ ) {
             
             bh[i][0] = i * rect_width;
-            h[i] = bh[i][0];
             bh[i][1] = PANEL_HEIGHT - (barHeights[i] * PANEL_HEIGHT) / maxBarHeight;
             bh[i][2] = rect_width;
             bh[i][3] = (barHeights[i] * PANEL_HEIGHT) / maxBarHeight;
                 
         }
+
+        sync = new Sync();
+        Sort<Integer> s = new BubbleSort<Integer>(sync);
+        SortThread<Integer> st = new SortThread<Integer>(s, barHeights);
+
+        t1 = new Thread(st);
     }
 
     @Override
@@ -78,7 +101,7 @@ class VisualizerPanel extends JPanel implements ActionListener{
         
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        //int rect_width = PANEL_WIDTH / barHeights.length;
+        int rect_width = PANEL_WIDTH / barHeights.length;
         
         c++;
 
@@ -87,7 +110,13 @@ class VisualizerPanel extends JPanel implements ActionListener{
         // bh[comparedIndices.second][0] = temp;
 
         for (int i = 0; i < bh.length; i++ ) {
-            g2d.fillRect(h[i], bh[i][1], bh[i][2], bh[i][3]);
+        
+            // if(comparedIndices.first == i)
+            //     g2d.fillRect(comparedIndices.second * rect_width, bh[i][1], bh[i][2], bh[i][3]);
+            // else if(comparedIndices.second == i)
+            //     g2d.fillRect(comparedIndices.first * rect_width, bh[i][1], bh[i][2], bh[i][3]);
+            // else
+                g2d.fillRect(bh[i][0], bh[i][1], bh[i][2], bh[i][3]);
         }
 
         // for (int i = 0; i < barHeights.length; i++ ) {
@@ -119,12 +148,35 @@ class VisualizerPanel extends JPanel implements ActionListener{
         // }
     }
 
+    public void swap(int i, int j)
+    {
+        Integer[] temp = bh[i];
+        bh[i] = bh[j];
+        bh[j] = temp;
+        bh[i][0] = i * rect_width;
+        bh[j][0] = j * rect_width;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        
-        if(e.getSource() != button)
-            return;
 
+            if(!sync.isCompleted)
+            {
+                comparedIndices = sync.receive((indexPiar) -> { 
+                    comparedIndices.set(indexPiar.first, indexPiar.second);
+                    swap(indexPiar.first, indexPiar.second);
+                    System.out.println(indexPiar.first + ", " + indexPiar.second);
+                    repaint();
+                } );
+            }
+            else if(sync.isCompleted)
+            {
+                timer.stop();// thread.join also do.
+                for(Integer a : barHeights)
+                    System.out.print(a + " ");
+                System.out.println();
+            }
+            System.out.println(c);
 
         // int count = 0;
         
@@ -144,12 +196,6 @@ class VisualizerPanel extends JPanel implements ActionListener{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            
-            sync = new Sync();
-            Sort<Integer> s = new BubbleSort<Integer>(sync);
-            SortThread<Integer> st = new SortThread<Integer>(s, barHeights);
-
-            Thread t1 = new Thread(st);
 
             t1.start();
 
@@ -167,14 +213,17 @@ class VisualizerPanel extends JPanel implements ActionListener{
             
             if(!sync.isCompleted)
             {
-                sync.receive((indexPiar) -> { 
-                    comparedIndices.set(indexPiar); 
-                    int temp = h[comparedIndices.first];
-                    h[comparedIndices.first] = h[comparedIndices.second];
-                    h[comparedIndices.second] = temp;
-                    System.out.println(comparedIndices.first + ", " + comparedIndices.second);
+                comparedIndices = sync.receive((indexPiar) -> { 
+                    // int temp = h[indexPiar.first];
+                    // h[indexPiar.first] = h[indexPiar.second];
+                    // h[indexPiar.second] = temp;
+                    swap(indexPiar.first, indexPiar.second);
+                    System.out.println(indexPiar.first + ", " + indexPiar.second);
                     repaint();
                 } );
+                // int temp = h[p.first];
+                // h[p.first] = h[p.second];
+                // h[p.second] = temp;
             }
             else if(sync.isCompleted)
             {
