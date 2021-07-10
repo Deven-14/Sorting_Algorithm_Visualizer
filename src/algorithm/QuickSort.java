@@ -1,8 +1,11 @@
 package algorithm;
 
+import datastructure.Sync;
+import datastructure.Pair;
+
 public class QuickSort<T extends Comparable<T>> extends Sort<T>{
     
-    public QuickSort() { }
+    public QuickSort(Sync s) { super(s); }
 
     private int parition(int left, int right)
     {
@@ -16,7 +19,9 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T>{
 
         while(left < right)
         {
-            swap(left++, right--);
+            sync.send(new Pair(left++, right--), (indexPair) -> { swap(indexPair.first, indexPair.second); });
+
+            //swap(left++, right--);
             
             while(list[right].compareTo(list[pivot]) > 0)
                 --right;
@@ -25,7 +30,9 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T>{
                 ++left;
         }
         
-        swap(pivot, right);
+        sync.send(new Pair(pivot, right), (indexPair) -> { swap(indexPair.first, indexPair.second); });
+
+        //swap(pivot, right);
 
         return right;
     }
@@ -40,8 +47,8 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T>{
         while(left < right)
         {
             
-            int randomIndex = random(left, right);
-            swap(randomIndex, left);
+            //int randomIndex = random(left, right);
+            //swap(randomIndex, left);
 
             int pivot = parition(left, right);
 
@@ -64,6 +71,8 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T>{
         this.size = list.length;
 
         sort(0, size - 1);
+
+        sync.isCompleted = true;
     }
 
 }

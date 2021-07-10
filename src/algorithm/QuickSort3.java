@@ -1,22 +1,11 @@
 package algorithm;
 
-class Pair
-{
-    int first;//default type
-    int second;
-
-    Pair() { first = second = -1; }
-
-    Pair(int first, int second)
-    {
-        this.first = first;
-        this.second = second;
-    }
-}
+import datastructure.Sync;
+import datastructure.Pair;
 
 public class QuickSort3<T extends Comparable<T>> extends QuickSort<T>{
    
-    public QuickSort3(T[] list) { }
+    public QuickSort3(Sync s) { super(s); }
 
     private Pair parition(int left, int right)
     {
@@ -31,10 +20,15 @@ public class QuickSort3<T extends Comparable<T>> extends QuickSort<T>{
 
         while(left < right)
         {
-            swap(left, right--);
+            sync.send(new Pair(left, right--), (indexPair) -> { swap(indexPair.first, indexPair.second); });
+
+            //swap(left, right--);
 
             if(list[left].compareTo(list[pivot]) == 0)
-                swap(++equalPivotIndex, left++);
+            {
+                sync.send(new Pair(++equalPivotIndex, left++), (indexPair) -> { swap(indexPair.first, indexPair.second); });
+                //swap(++equalPivotIndex, left++);
+            }
             else
                 ++left;
             
@@ -46,7 +40,10 @@ public class QuickSort3<T extends Comparable<T>> extends QuickSort<T>{
         }
         
         for(int i = pivot, j = 0; i <= equalPivotIndex; ++i, ++j)
-            swap(i, right - j);
+        {
+            sync.send(new Pair(i, right - j), (indexPair) -> { swap(indexPair.first, indexPair.second); });
+            //swap(i, right - j);
+        }
 
         return (new Pair(right - (equalPivotIndex - pivot), right));
     }
@@ -56,8 +53,8 @@ public class QuickSort3<T extends Comparable<T>> extends QuickSort<T>{
         while(left < right)
         {
 
-            int randomIndex = random(left, right);
-            swap(randomIndex, left);
+            //int randomIndex = random(left, right);
+            //swap(randomIndex, left);
 
             Pair pivot = parition(left, right);
 
@@ -80,6 +77,8 @@ public class QuickSort3<T extends Comparable<T>> extends QuickSort<T>{
         this.size = list.length;
 
         sort(0, size - 1);
+
+        sync.isCompleted = true;
     }
 
 }

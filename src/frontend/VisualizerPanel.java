@@ -1,6 +1,7 @@
 package frontend;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -12,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import datastructure.Sync;
+import input.Student;
 import datastructure.Pair;
 
 import backend.GetRequiredData;
@@ -33,6 +35,7 @@ class VisualizerPanel extends JPanel{
 
     Sync sync;   
     Thread t1;
+    Object[] list;
     GetRequiredData requiredData;
 
     VisualizerPanel()//, Sync sync) {
@@ -58,6 +61,27 @@ class VisualizerPanel extends JPanel{
         // t1 = new Thread(st);
     }
 
+    String getStringValue(Object o)
+    {
+        switch(DataTypeComboBox.SELECTED_TYPE)
+        {
+            case DataTypeComboBox.INTEGER_TYPE:
+                return ((Integer)o).toString();
+            case DataTypeComboBox.FLOAT_TYPE:
+                return ((Float)o).toString();
+            case DataTypeComboBox.DOUBLE_TYPE:
+                return ((Double)o).toString();
+            case DataTypeComboBox.CHARACTER_TYPE:
+                return ((Character)o).toString();
+            case DataTypeComboBox.STRING_TYPE:
+                return ((String)o);
+            case DataTypeComboBox.STUDENT_TYPE:
+                return ((Student)o).toString();
+            default:
+                return ((Integer)o).toString();
+        }
+    }
+
     @Override
     public void paintComponent (Graphics g) {
         
@@ -75,6 +99,9 @@ class VisualizerPanel extends JPanel{
         for (int i = 0; i < bars.length; i++ ) {
             g2d.setPaint(Color.darkGray);
             g2d.fillRect(bars[i][0], bars[i][1], bars[i][2], bars[i][3]);
+            g2d.setPaint(Color.black);
+            g2d.setFont(new Font(null, Font.BOLD, 25));
+            g2d.drawString(getStringValue(list[i]), bars[i][0], bars[i][1]);
             if((i == index1 || i == index2) && index1 != index2)
             {
                 g2d.setPaint(Color.RED);
@@ -83,7 +110,10 @@ class VisualizerPanel extends JPanel{
             } 
         }
 
-        swap(index1, index2);
+        if(AlgorithmComboBox.SELECTED_SORT != AlgorithmComboBox.MERGE_SORT && AlgorithmComboBox.SELECTED_SORT != AlgorithmComboBox.INSERTION_SORT)
+            swap(index1, index2);
+        else
+            Move(index1, index2);
     }
 
     public void swap(int i, int j)
@@ -95,6 +125,19 @@ class VisualizerPanel extends JPanel{
         bars[j][0] = j * rect_width;
     }
 
+    public void Move(int i, int j)
+    {
+        Integer[] temp = bars[j];
+        for(int k = j - 1; k >= i; --k)
+        {
+            //bars[k][0] = bars[k+1][0];
+            bars[k][0] = (k+1) * rect_width;
+            bars[k + 1] = bars[k];
+        }
+        temp[0] = i * rect_width;
+        bars[i] = temp;
+    }
+
     private class StartSort implements ActionListener
     {
         @Override
@@ -104,6 +147,7 @@ class VisualizerPanel extends JPanel{
             t1 = requiredData.getSortThread();
 
             sync = requiredData.getSync();
+            list = requiredData.getList();
 
             barHeights = requiredData.getBarHeigths();
             bars = new Integer[barHeights.length][4];

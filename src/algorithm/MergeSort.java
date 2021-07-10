@@ -1,8 +1,11 @@
 package algorithm;
 
+import datastructure.Sync;
+import datastructure.Pair;
+
 public class MergeSort<T extends Comparable<T>> extends Sort<T>{
     
-    public MergeSort() { }
+    public MergeSort(Sync s) { super(s); }
 
     @SuppressWarnings("unchecked")
     private void merge(int left, int mid, int right)
@@ -20,17 +23,29 @@ public class MergeSort<T extends Comparable<T>> extends Sort<T>{
                 tempList[k++] = list[i++];
             
             while(j <= right && list[j].compareTo(list[i]) <= 0)
-                tempList[k++] = list[j++];
+            {
+                int tempk = k;
+                int tempj = j;
+                sync.send(new Pair(left + k, j), (indexPair) -> { tempList[tempk] = list[tempj]; });
+                k++;
+                j++;
+            }
+
+                //tempList[k++] = list[j++];
 
         }
 
         if(i > mid)
+        {
             while(j <= right)
                 tempList[k++] = list[j++];
+        }
         else
+        {
             while(i <= mid)
-            tempList[k++] = list[i++];
-        
+                tempList[k++] = list[i++];
+        }
+
         for(int l = left, m = 0; l <= right; ++l, ++m)
             list[l] = (T)tempList[m];
 
@@ -55,6 +70,8 @@ public class MergeSort<T extends Comparable<T>> extends Sort<T>{
         this.size = list.length;
 
         sort(0, size - 1);
+
+        sync.isCompleted = true;
     }
 
 }

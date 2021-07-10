@@ -1,8 +1,11 @@
 package algorithm;
 
+import datastructure.Sync;
+import datastructure.Pair;
+
 public class InsertionSort<T extends Comparable<T>> extends Sort<T> {
 
-    public InsertionSort() { }
+    public InsertionSort(Sync s) { super(s); }
 
     public void sort(T[] Array)
     {
@@ -23,7 +26,11 @@ public class InsertionSort<T extends Comparable<T>> extends Sort<T> {
             }
 
             list[j + 1] = key;
+            sync.send(new Pair(j+1, i), (indexPair) -> {  });
+
         }
+
+        sync.isCompleted = true;
     }
 
 }

@@ -24,7 +24,7 @@ public class Student implements Comparable<Student>, RandomType<Student>{
 
     public String toString()
     {
-        return "USN : " + usn + ", Name : " + name;
+        return usn + ", " + name;
     }
 
     public Student getRandomValue()

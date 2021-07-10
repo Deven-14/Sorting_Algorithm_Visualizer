@@ -7,6 +7,7 @@ import datastructure.Sync;
 
 public class GetRequiredData {
 
+    public Object[] list;
     public Integer[] barHeights;
     public Sync sync;
 
@@ -26,6 +27,11 @@ public class GetRequiredData {
         return sync;
     }
 
+    public Object[] getList()
+    {
+        return list;
+    }
+
     public Thread getSortThread()
     {
         Thread t;
@@ -37,6 +43,7 @@ public class GetRequiredData {
                 Integer[] list = new Integer[ArraySizeSlider.SIZE];
                 RandomArray<Integer> randomArray = new RandomArray<>(new RandomInteger());
                 randomArray.generateRandomArray(list);
+                this.list = list;
                 // for(Integer a : list)
                 //     System.out.print(a + ", ");
                 // System.out.println();
@@ -52,6 +59,7 @@ public class GetRequiredData {
                 Character[] list = new Character[ArraySizeSlider.SIZE];
                 RandomArray<Character> randomArray = new RandomArray<>(new RandomCharacter());
                 randomArray.generateRandomArray(list);
+                this.list = list;
                 GetBarHeights<Character> BarHeights = new GetBarHeights<>();
                 barHeights = BarHeights.get(list);
                 GetSortThread<Character> getSortThread = new GetSortThread<Character>(list, sync);
@@ -64,6 +72,7 @@ public class GetRequiredData {
                 Float[] list = new Float[ArraySizeSlider.SIZE];
                 RandomArray<Float> randomArray = new RandomArray<>(new RandomFloat());
                 randomArray.generateRandomArray(list);
+                this.list = list;
                 GetBarHeights<Float> BarHeights = new GetBarHeights<>();
                 barHeights = BarHeights.get(list);
                 GetSortThread<Float> getSortThread = new GetSortThread<Float>(list, sync);
@@ -76,6 +85,7 @@ public class GetRequiredData {
                 Double[] list = new Double[ArraySizeSlider.SIZE];
                 RandomArray<Double> randomArray = new RandomArray<>(new RandomDouble());
                 randomArray.generateRandomArray(list);
+                this.list = list;
                 GetBarHeights<Double> BarHeights = new GetBarHeights<>();
                 barHeights = BarHeights.get(list);
                 GetSortThread<Double> getSortThread = new GetSortThread<Double>(list, sync);
@@ -88,9 +98,23 @@ public class GetRequiredData {
                 String[] list = new String[ArraySizeSlider.SIZE];
                 RandomArray<String> randomArray = new RandomArray<>(new RandomString());
                 randomArray.generateRandomArray(list);
+                this.list = list;
                 GetBarHeights<String> BarHeights = new GetBarHeights<>();
                 barHeights = BarHeights.get(list);
                 GetSortThread<String> getSortThread = new GetSortThread<String>(list, sync);
+                t = new Thread(getSortThread.get());
+                break;
+            }
+
+            case DataTypeComboBox.STUDENT_TYPE:
+            {
+                Student[] list = new Student[ArraySizeSlider.SIZE];
+                RandomArray<Student> randomArray = new RandomArray<>(new Student());
+                randomArray.generateRandomArray(list);
+                this.list = list;
+                GetBarHeights<Student> BarHeights = new GetBarHeights<>();
+                barHeights = BarHeights.get(list);
+                GetSortThread<Student> getSortThread = new GetSortThread<Student>(list, sync);
                 t = new Thread(getSortThread.get());
                 break;
             }
@@ -100,6 +124,7 @@ public class GetRequiredData {
                 Integer[] list = new Integer[ArraySizeSlider.SIZE];
                 RandomArray<Integer> randomArray = new RandomArray<>(new RandomInteger());
                 randomArray.generateRandomArray(list);
+                this.list = list;
                 GetBarHeights<Integer> BarHeights = new GetBarHeights<>();
                 barHeights = BarHeights.get(list);
                 GetSortThread<Integer> getSortThread = new GetSortThread<Integer>(list, sync);
