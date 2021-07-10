@@ -2,14 +2,14 @@ package input;
 
 public class RandomArray<T> {
     
-    private RandomValue<T> randomValue;
+    private RandomType<T> randomType;
     private int size;
-    private final int minSize = 0;
+    private final int minSize = 1;
     private final int maxSize = 20;
 
-    RandomArray(RandomValue<T> randomValue)
+    public RandomArray(RandomType<T> randomType)
     {
-        this.randomValue = randomValue;
+        this.randomType = randomType;
     }
     
     public void generateRandomArray(T[] list)
@@ -25,7 +25,7 @@ public class RandomArray<T> {
                 throw new SizeOutOfBounds("Length of Array is greater than " + maxSize);
 
             for(int i = 0; i < size; ++i)
-                list[i] = randomValue.getRandomValue();
+                list[i] = randomType.getRandomValue();
         }
         catch(SizeOutOfBounds s)
         {
@@ -35,7 +35,7 @@ public class RandomArray<T> {
 
     }
     
-    public static void main(String[] args)
+    /*public static void main(String[] args)
     {
         Integer[] i = new Integer[20];
         RandomArray<Integer> n1 = new RandomArray<Integer>(new RandomInteger());
@@ -59,11 +59,11 @@ public class RandomArray<T> {
         System.out.println();
 
         Student[] s2 = new Student[20];
-        RandomArray<Student> n7 = new RandomArray<Student>(new RandomStudent());
+        RandomArray<Student> n7 = new RandomArray<Student>(new Student());
         n7.generateRandomArray(s2);
         for(Student n8 : s2)
             System.out.print(n8 +", ");
         System.out.println();
-    }
+    }*/
 
 }

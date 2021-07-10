@@ -21,7 +21,6 @@ public class BubbleSort<T extends Comparable<T>> extends Sort<T>
                     //swap(list[j], list[j+1]); not possible as Integer, String etc are immutable objects, but if T was of user defined type like student then this would work
                     sync.send(new Pair(j, j+1), (indexPair) -> {
                         swap(indexPair.first, indexPair.second); 
-                        System.out.println(indexPair.first + ", " + indexPair.second);
                     });//or using runnable method, sync Pair p = Pair(j, j+1); send(p, () -> swap(p.first, p.second));
                 }
             }

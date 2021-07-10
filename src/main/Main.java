@@ -1,9 +1,6 @@
 package main;
 
-import datastructure.Sync;
 import frontend.MainWindow;
-import algorithm.BubbleSort;
-import algorithm.Sort;
 
 public class Main {
 

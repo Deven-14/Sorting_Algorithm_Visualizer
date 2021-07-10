@@ -2,7 +2,7 @@ package algorithm;
 
 import datastructure.Sync;
 
-public abstract class Sort<T> {
+public abstract class Sort<T extends Comparable<T>> {
     
     protected T[] list;
     protected int size;

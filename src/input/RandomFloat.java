@@ -2,7 +2,7 @@ package input;
 
 import java.lang.Math;
 
-public class RandomFloat implements RandomValue<Float>
+public class RandomFloat implements RandomType<Float>
 {
     public Float getRandomValue()
     {

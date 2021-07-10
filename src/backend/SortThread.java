@@ -1,10 +1,8 @@
-package main;
+package backend;
 
 import algorithm.Sort;
-import algorithm.BubbleSort;
-import datastructure.Sync;
 
-public class SortThread<T> implements Runnable{
+public class SortThread<T extends Comparable<T>> implements Runnable{
 
     Sort<T> sortAlgorithm;
     T[] list;

@@ -11,20 +11,20 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import algorithm.BubbleSort;
-import algorithm.Sort;
 import datastructure.Sync;
-import main.SortThread;
 import datastructure.Pair;
+
+import backend.GetRequiredData;
 
 class VisualizerPanel extends JPanel{
 
     final int PANEL_WIDTH = 800;
     final int PANEL_HEIGHT = 475;
 
-    Integer[][] bars;
+    Integer[] barHeights;
+    Integer[][] bars = null;
     int maxBarHeight;
-    Integer rect_width;
+    int rect_width;
 
     Pair comparedIndices;
 
@@ -33,21 +33,15 @@ class VisualizerPanel extends JPanel{
 
     Sync sync;   
     Thread t1;
+    GetRequiredData requiredData;
 
-    VisualizerPanel (Integer[] barHeights)//, Sync sync) {
+    VisualizerPanel()//, Sync sync) {
     {
+        //Integer[] barHeights = {40, 70, 90, 20, 10, 60, 5};
         this.maxBarHeight = 100; // default range 1 - 1000
-        rect_width = PANEL_WIDTH / barHeights.length;
+        //rect_width = PANEL_WIDTH / barHeights.length;
 
-        bars = new Integer[barHeights.length][4];
-        for (int i = 0; i < barHeights.length; i++ ) {
-            
-            bars[i][0] = i * rect_width;
-            bars[i][1] = PANEL_HEIGHT - (barHeights[i] * PANEL_HEIGHT) / maxBarHeight;
-            bars[i][2] = rect_width;
-            bars[i][3] = (barHeights[i] * PANEL_HEIGHT) / maxBarHeight;
-                
-        }
+        sync = null;
 
         comparedIndices = new Pair(0, 0);
 
@@ -57,11 +51,11 @@ class VisualizerPanel extends JPanel{
         
         this.add(button);
 
-        sync = new Sync();
-        Sort<Integer> s = new BubbleSort<Integer>(sync);
-        SortThread<Integer> st = new SortThread<Integer>(s, barHeights);
+        // sync = new Sync();
+        // Sort<Integer> s = new BubbleSort<Integer>(sync);
+        // SortThread<Integer> st = new SortThread<Integer>(s, barHeights);
 
-        t1 = new Thread(st);
+        // t1 = new Thread(st);
     }
 
     @Override
@@ -69,6 +63,9 @@ class VisualizerPanel extends JPanel{
         
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+
+        if(bars == null)
+            return;
 
         int index1 = comparedIndices.first;
         int index2 = comparedIndices.second;
@@ -103,6 +100,26 @@ class VisualizerPanel extends JPanel{
         @Override
         public void actionPerformed(ActionEvent e) {
 
+            requiredData = new GetRequiredData();
+            t1 = requiredData.getSortThread();
+
+            sync = requiredData.getSync();
+
+            barHeights = requiredData.getBarHeigths();
+            bars = new Integer[barHeights.length][4];
+
+            rect_width = PANEL_WIDTH / barHeights.length;
+
+            for (int i = 0; i < barHeights.length; i++ ) {
+            
+                bars[i][0] = i * rect_width;
+                bars[i][1] = PANEL_HEIGHT - (barHeights[i] * PANEL_HEIGHT) / maxBarHeight;
+                bars[i][2] = rect_width;
+                bars[i][3] = (barHeights[i] * PANEL_HEIGHT) / maxBarHeight;
+                    
+            }
+
+            button.setEnabled(false);
             t1.start();
             timer.start();
 
@@ -116,19 +133,19 @@ class VisualizerPanel extends JPanel{
         public void actionPerformed(ActionEvent e) {
             
             comparedIndices = sync.receive((indexPair) -> { 
-                //swap(indexPair.first, indexPair.second);
-                System.out.println(indexPair.first + ", " + indexPair.second);
+                //System.out.println(indexPair.first + ", " + indexPair.second);
                 repaint();
-            } );
+            });
             
             if(sync.isCompleted)
             {
-                timer.stop();// thread.join also do.
+                timer.stop();
                 Timer timer2 = new Timer(1000, e1 -> repaint());//last swap, coz we are showing which to swap and then swapping
                 timer2.setRepeats(false);
                 timer2.start();
+                button.setEnabled(true);
+                //System.out.println(t1.isAlive());
             }
-            //swap(comparedIndices.first, comparedIndices.second);
             
         }
         

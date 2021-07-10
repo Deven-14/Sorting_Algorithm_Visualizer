@@ -2,7 +2,7 @@ package input;
 
 import java.lang.Math;
 
-public class RandomDouble implements RandomValue<Double>
+public class RandomDouble implements RandomType<Double>
 {
     public Double getRandomValue()
     {

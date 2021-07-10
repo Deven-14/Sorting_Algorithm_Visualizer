@@ -1,6 +1,6 @@
 package input;
 
-public class Student implements Comparable<Student>{
+public class Student implements Comparable<Student>, RandomType<Student>{
     
     private int usn;
     private String name;
@@ -25,5 +25,13 @@ public class Student implements Comparable<Student>{
     public String toString()
     {
         return "USN : " + usn + ", Name : " + name;
+    }
+
+    public Student getRandomValue()
+    {
+        RandomInteger usn = new RandomInteger();
+        RandomString name = new RandomString();
+        Student s = new Student(usn.getRandomValue(), name.getRandomValue());
+        return s;
     }
 }

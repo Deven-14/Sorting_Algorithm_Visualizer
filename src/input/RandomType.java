@@ -1,6 +1,6 @@
 package input;
 
-public interface RandomValue<T>
+public interface RandomType<T>
 {
     T getRandomValue();
 }

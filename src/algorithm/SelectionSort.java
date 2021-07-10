@@ -1,8 +1,11 @@
 package algorithm;
 
+import datastructure.Sync;
+import datastructure.Pair;
+
 public class SelectionSort<T extends Comparable<T>> extends Sort<T> {
 
-    public SelectionSort() { }
+    public SelectionSort(Sync s) { super(s); }
 
     public void sort(T[] Array)
     {
@@ -22,8 +25,10 @@ public class SelectionSort<T extends Comparable<T>> extends Sort<T> {
             }
 
             if(minIndex != i)
-                swap(i, minIndex);
+                sync.send(new Pair(minIndex, i), (indexPair) -> { swap(indexPair.first, indexPair.second); });
         }
+
+        sync.isCompleted = true;
     }
 
 }
