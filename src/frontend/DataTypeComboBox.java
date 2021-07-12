@@ -13,14 +13,12 @@ public class DataTypeComboBox extends JComboBox<String>{
     public static final int CHARACTER_TYPE = 3;
     public static final int STRING_TYPE = 4;
     public static final int STUDENT_TYPE = 5;
-    public static int SELECTED_TYPE = 0;
 
     public DataTypeComboBox()
     {
         super(dataTypes);
 
         this.setBackground(new Color(0xffffff));
-        this.addActionListener( e -> { SELECTED_TYPE = this.getSelectedIndex(); } );
 
     }
 

@@ -12,11 +12,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+//import java.awt.event.ActionEvent;
+//import java.awt.event.ActionListener;
 
 
-public class MainWindow extends JFrame implements ActionListener {
+public class MainWindow extends JFrame{
 
     final int WIDTH = 1000;
     final int HEIGHT = WIDTH * 9 / 16;
@@ -74,10 +74,10 @@ public class MainWindow extends JFrame implements ActionListener {
 
         sizeLabel = new JLabel();
         toolBarPanel.add(sizeLabel);
-        arraySizeSlider = new ArraySizeSlider(sizeLabel);
-        // arraySizeSlider.addChangeListener((e) -> {
-        //     sizeLabel.setText("size = " + arraySizeSlider.getValue());
-        // });
+        arraySizeSlider = new ArraySizeSlider();
+        arraySizeSlider.addChangeListener((e) -> {
+            sizeLabel.setText("size = " + arraySizeSlider.getValue());
+        });
         sizeLabel.setText("size = " + arraySizeSlider.getValue());
         toolBarPanel.add(arraySizeSlider);
         
@@ -85,8 +85,7 @@ public class MainWindow extends JFrame implements ActionListener {
         sidePanel.setPreferredSize(new Dimension(200, 200));
         sidePanel.setBackground(Color.white);
         
-        //mainPanel = new BubbleSortVisualizer(heights);
-        mainPanel = new VisualizerPanel();//, sync);
+        mainPanel = new VisualizerPanel(dataTypeComboBox, algorithmComboBox, arraySizeSlider);
         // mainPanel.setPreferredSize(new Dimension(500, 500)); // 800, 800 * 9 / 16
         
         getContentPane().add(toolBarPanel, BorderLayout.NORTH);
@@ -96,12 +95,4 @@ public class MainWindow extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
-
-    @Override
-    public void actionPerformed (ActionEvent e) {
-        // System.out.println(((ComboItem)rangeSelection.getSelectedItem()).getValue());
-        //mainPanel.maxBarHeight = ((ComboBoxItem)rangeSelection.getSelectedItem()).getValue();
-        //repaint();
-
-    }
 }

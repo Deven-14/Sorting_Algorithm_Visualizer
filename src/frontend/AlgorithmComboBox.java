@@ -14,15 +14,13 @@ public class AlgorithmComboBox extends JComboBox<String> {
     public static final int HEAP_SORT = 4;
     public static final int QUICK_SORT = 5;
     public static final int QUICK_SORT_3 = 6;
-    public static int SELECTED_SORT = 0;
-    
+
     public AlgorithmComboBox()
     {
         super(sortingAlgorithms);
 
         this.setBackground(new Color(0xffffff));
-        this.addActionListener( e -> { SELECTED_SORT = this.getSelectedIndex(); } );
-
+        
     }
 
 }

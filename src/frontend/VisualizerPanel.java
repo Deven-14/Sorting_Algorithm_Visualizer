@@ -15,7 +15,7 @@ import javax.swing.Timer;
 import datastructure.Sync;
 import input.Student;
 import datastructure.Pair;
-
+import backend.BarLabels;
 import backend.GetRequiredData;
 
 class VisualizerPanel extends JPanel{
@@ -30,57 +30,57 @@ class VisualizerPanel extends JPanel{
 
     Pair comparedIndices;
 
-    JButton button;
+    JButton startSortButton;
     Timer timer;
 
     Sync sync;   
     Thread t1;
-    Object[] list;
     GetRequiredData requiredData;
+    BarLabels barLabels;
 
-    VisualizerPanel()//, Sync sync) {
+    DataTypeComboBox dataTypeComboBox;
+    AlgorithmComboBox algorithmComboBox;
+    ArraySizeSlider arraySizeSlider;
+
+    VisualizerPanel(DataTypeComboBox dataTypeComboBox, AlgorithmComboBox algorithmComboBox, ArraySizeSlider arraySizeSlider)
     {
-        //Integer[] barHeights = {40, 70, 90, 20, 10, 60, 5};
         this.maxBarHeight = 100; // default range 1 - 1000
-        //rect_width = PANEL_WIDTH / barHeights.length;
+
+        this.dataTypeComboBox = dataTypeComboBox;
+        this.algorithmComboBox = algorithmComboBox;
+        this.arraySizeSlider = arraySizeSlider;
 
         sync = null;
-
         comparedIndices = new Pair(0, 0);
 
-        button = new JButton("Start");
-        button.addActionListener(new StartSort());
+        startSortButton = new JButton("Start");
+        startSortButton.addActionListener(new StartSort());
         timer = new Timer(1000, new SortAnElement());
         
-        this.add(button);
-
-        // sync = new Sync();
-        // Sort<Integer> s = new BubbleSort<Integer>(sync);
-        // SortThread<Integer> st = new SortThread<Integer>(s, barHeights);
-
-        // t1 = new Thread(st);
+        this.add(startSortButton);
     }
 
-    String getStringValue(Object o)
-    {
-        switch(DataTypeComboBox.SELECTED_TYPE)
-        {
-            case DataTypeComboBox.INTEGER_TYPE:
-                return ((Integer)o).toString();
-            case DataTypeComboBox.FLOAT_TYPE:
-                return ((Float)o).toString();
-            case DataTypeComboBox.DOUBLE_TYPE:
-                return ((Double)o).toString();
-            case DataTypeComboBox.CHARACTER_TYPE:
-                return ((Character)o).toString();
-            case DataTypeComboBox.STRING_TYPE:
-                return ((String)o);
-            case DataTypeComboBox.STUDENT_TYPE:
-                return ((Student)o).toString();
-            default:
-                return ((Integer)o).toString();
-        }
-    }
+    // String getStringValue(Object o)
+    // {
+
+    //     switch(requiredData.getSelectedDataTypeIndex())
+    //     {
+    //         case DataTypeComboBox.INTEGER_TYPE:
+    //             return ((Integer)o).toString();
+    //         case DataTypeComboBox.FLOAT_TYPE:
+    //             return ((Float)o).toString();
+    //         case DataTypeComboBox.DOUBLE_TYPE:
+    //             return String.format("%.4f",((Double)o).toString());
+    //         case DataTypeComboBox.CHARACTER_TYPE:
+    //             return ((Character)o).toString();
+    //         case DataTypeComboBox.STRING_TYPE:
+    //             return ((String)o);
+    //         case DataTypeComboBox.STUDENT_TYPE:
+    //             return ((Student)o).toString();
+    //         default:
+    //             return ((Integer)o).toString();
+    //     }
+    // }
 
     @Override
     public void paintComponent (Graphics g) {
@@ -94,14 +94,12 @@ class VisualizerPanel extends JPanel{
         int index1 = comparedIndices.first;
         int index2 = comparedIndices.second;
 
-        //swap(index1, index2);
-
         for (int i = 0; i < bars.length; i++ ) {
             g2d.setPaint(Color.darkGray);
             g2d.fillRect(bars[i][0], bars[i][1], bars[i][2], bars[i][3]);
             g2d.setPaint(Color.black);
             g2d.setFont(new Font(null, Font.BOLD, 25));
-            g2d.drawString(getStringValue(list[i]), bars[i][0], bars[i][1]);
+            g2d.drawString(barLabels.at(i), bars[i][0], bars[i][1]);
             if((i == index1 || i == index2) && index1 != index2)
             {
                 g2d.setPaint(Color.RED);
@@ -110,7 +108,7 @@ class VisualizerPanel extends JPanel{
             } 
         }
 
-        if(AlgorithmComboBox.SELECTED_SORT != AlgorithmComboBox.MERGE_SORT && AlgorithmComboBox.SELECTED_SORT != AlgorithmComboBox.INSERTION_SORT)
+        if(requiredData.getSelectedAlgorithmIndex() != AlgorithmComboBox.MERGE_SORT && requiredData.getSelectedAlgorithmIndex() != AlgorithmComboBox.INSERTION_SORT)
             swap(index1, index2);
         else
             Move(index1, index2);
@@ -123,6 +121,8 @@ class VisualizerPanel extends JPanel{
         bars[j] = temp;
         bars[i][0] = i * rect_width;
         bars[j][0] = j * rect_width;
+
+        barLabels.swap(i, j);
     }
 
     public void Move(int i, int j)
@@ -136,6 +136,8 @@ class VisualizerPanel extends JPanel{
         }
         temp[0] = i * rect_width;
         bars[i] = temp;
+
+        barLabels.Move(i, j);
     }
 
     private class StartSort implements ActionListener
@@ -143,11 +145,11 @@ class VisualizerPanel extends JPanel{
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            requiredData = new GetRequiredData();
+            requiredData = new GetRequiredData(dataTypeComboBox.getSelectedIndex(), algorithmComboBox.getSelectedIndex(), arraySizeSlider.getValue());
             t1 = requiredData.getSortThread();
 
             sync = requiredData.getSync();
-            list = requiredData.getList();
+            barLabels = requiredData.getBarLabels();
 
             barHeights = requiredData.getBarHeigths();
             bars = new Integer[barHeights.length][4];
@@ -163,7 +165,11 @@ class VisualizerPanel extends JPanel{
                     
             }
 
-            button.setEnabled(false);
+            startSortButton.setEnabled(false);
+            dataTypeComboBox.setEnabled(false);
+            algorithmComboBox.setEnabled(false);
+            arraySizeSlider.setEnabled(false);
+
             t1.start();
             timer.start();
 
@@ -187,7 +193,10 @@ class VisualizerPanel extends JPanel{
                 Timer timer2 = new Timer(1000, e1 -> repaint());//last swap, coz we are showing which to swap and then swapping
                 timer2.setRepeats(false);
                 timer2.start();
-                button.setEnabled(true);
+                startSortButton.setEnabled(true);
+                dataTypeComboBox.setEnabled(true);//coz as we change this during a running sorting process, it'll call repaint most probably and the sorting is not going properly
+                algorithmComboBox.setEnabled(true);
+                arraySizeSlider.setEnabled(true);
                 //System.out.println(t1.isAlive());
             }
             

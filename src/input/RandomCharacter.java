@@ -7,6 +7,6 @@ public class RandomCharacter implements RandomType<Character>
     public Character getRandomValue()
     {
         Double data = Math.random() * 100;
-        return (char)((int)(97 + (data % 26)));
+        return (char)((97 + (int)(data % 26)));
     }
 }

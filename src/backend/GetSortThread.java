@@ -8,7 +8,6 @@ import algorithm.QuickSort;
 import algorithm.QuickSort3;
 import algorithm.SelectionSort;
 import datastructure.Sync;
-
 import frontend.AlgorithmComboBox;
 
 public class GetSortThread<T extends Comparable<T>> {
@@ -16,16 +15,18 @@ public class GetSortThread<T extends Comparable<T>> {
     SortThread<T> st;
     Sync sync;
     T[] list;
+    private final int selectedAlgorithmIndex;
 
-    GetSortThread(T[] list, Sync sync)
+    GetSortThread(int selectedAlgotihmIndex, T[] list, Sync sync)
     {
+        this.selectedAlgorithmIndex = selectedAlgotihmIndex;
         this.sync = sync;
         this.list = list;
     }
 
     public SortThread<T> get()
     {
-        switch(AlgorithmComboBox.SELECTED_SORT)
+        switch(selectedAlgorithmIndex)
         {
             case AlgorithmComboBox.BUBBLE_SORT:
                 st = new SortThread<T>(new BubbleSort<T>(sync), list);

@@ -1,20 +1,42 @@
 package backend;
 
 import frontend.DataTypeComboBox;
-import frontend.ArraySizeSlider;
 import input.*;
 import datastructure.Sync;
 
 public class GetRequiredData {
 
-    public Object[] list;
     public Integer[] barHeights;
     public Sync sync;
+    public BarLabels barLabels;
+    private final int selectedDataTypeIndex;
+    private final int arraySize;
+    private final int selectedAlgorithmIndex;
 
-    public GetRequiredData()
+    public GetRequiredData(int selectedDataTypeIndex, int selectedAlgorithmIndex, int arraySize)
     {
+        this.selectedDataTypeIndex = selectedDataTypeIndex;
+        this.selectedAlgorithmIndex = selectedAlgorithmIndex;
+        this.arraySize = arraySize;
+
         barHeights = null;
+        barLabels = null;
         sync = new Sync();
+    }
+
+    public int getSelectedDataTypeIndex()
+    {
+        return selectedDataTypeIndex;
+    }
+
+    public int getSelectedAlgorithmIndex()
+    {
+        return selectedAlgorithmIndex;
+    }
+
+    public int getArraySize()
+    {
+        return arraySize;
     }
 
     public Integer[] getBarHeigths()
@@ -27,107 +49,107 @@ public class GetRequiredData {
         return sync;
     }
 
-    public Object[] getList()
+    public BarLabels getBarLabels()
     {
-        return list;
+        return barLabels;
     }
 
     public Thread getSortThread()
     {
         Thread t;
 
-        switch(DataTypeComboBox.SELECTED_TYPE)
+        switch(selectedDataTypeIndex)
         {
             case DataTypeComboBox.INTEGER_TYPE:
             {
-                Integer[] list = new Integer[ArraySizeSlider.SIZE];
+                Integer[] list = new Integer[arraySize];
                 RandomArray<Integer> randomArray = new RandomArray<>(new RandomInteger());
                 randomArray.generateRandomArray(list);
-                this.list = list;
+                barLabels = new BarLabels(list, selectedDataTypeIndex);
                 // for(Integer a : list)
                 //     System.out.print(a + ", ");
                 // System.out.println();
                 GetBarHeights<Integer> BarHeights = new GetBarHeights<>();
                 barHeights = BarHeights.get(list);
-                GetSortThread<Integer> getSortThread = new GetSortThread<Integer>(list, sync);
+                GetSortThread<Integer> getSortThread = new GetSortThread<Integer>(selectedAlgorithmIndex, list, sync);
                 t = new Thread(getSortThread.get());
                 break;
             }
 
             case DataTypeComboBox.CHARACTER_TYPE:
             {
-                Character[] list = new Character[ArraySizeSlider.SIZE];
+                Character[] list = new Character[arraySize];
                 RandomArray<Character> randomArray = new RandomArray<>(new RandomCharacter());
                 randomArray.generateRandomArray(list);
-                this.list = list;
+                barLabels = new BarLabels(list, selectedDataTypeIndex);
                 GetBarHeights<Character> BarHeights = new GetBarHeights<>();
                 barHeights = BarHeights.get(list);
-                GetSortThread<Character> getSortThread = new GetSortThread<Character>(list, sync);
+                GetSortThread<Character> getSortThread = new GetSortThread<Character>(selectedAlgorithmIndex, list, sync);
                 t = new Thread(getSortThread.get());
                 break;
             }
 
             case DataTypeComboBox.FLOAT_TYPE:
             {
-                Float[] list = new Float[ArraySizeSlider.SIZE];
+                Float[] list = new Float[arraySize];
                 RandomArray<Float> randomArray = new RandomArray<>(new RandomFloat());
                 randomArray.generateRandomArray(list);
-                this.list = list;
+                barLabels = new BarLabels(list, selectedDataTypeIndex);
                 GetBarHeights<Float> BarHeights = new GetBarHeights<>();
                 barHeights = BarHeights.get(list);
-                GetSortThread<Float> getSortThread = new GetSortThread<Float>(list, sync);
+                GetSortThread<Float> getSortThread = new GetSortThread<Float>(selectedAlgorithmIndex, list, sync);
                 t = new Thread(getSortThread.get());
                 break;
             }
 
             case DataTypeComboBox.DOUBLE_TYPE:
             {
-                Double[] list = new Double[ArraySizeSlider.SIZE];
+                Double[] list = new Double[arraySize];
                 RandomArray<Double> randomArray = new RandomArray<>(new RandomDouble());
                 randomArray.generateRandomArray(list);
-                this.list = list;
+                barLabels = new BarLabels(list, selectedDataTypeIndex);
                 GetBarHeights<Double> BarHeights = new GetBarHeights<>();
                 barHeights = BarHeights.get(list);
-                GetSortThread<Double> getSortThread = new GetSortThread<Double>(list, sync);
+                GetSortThread<Double> getSortThread = new GetSortThread<Double>(selectedAlgorithmIndex, list, sync);
                 t = new Thread(getSortThread.get());
                 break;
             }
 
             case DataTypeComboBox.STRING_TYPE:
             {
-                String[] list = new String[ArraySizeSlider.SIZE];
+                String[] list = new String[arraySize];
                 RandomArray<String> randomArray = new RandomArray<>(new RandomString());
                 randomArray.generateRandomArray(list);
-                this.list = list;
+                barLabels = new BarLabels(list, selectedDataTypeIndex);
                 GetBarHeights<String> BarHeights = new GetBarHeights<>();
                 barHeights = BarHeights.get(list);
-                GetSortThread<String> getSortThread = new GetSortThread<String>(list, sync);
+                GetSortThread<String> getSortThread = new GetSortThread<String>(selectedAlgorithmIndex, list, sync);
                 t = new Thread(getSortThread.get());
                 break;
             }
 
             case DataTypeComboBox.STUDENT_TYPE:
             {
-                Student[] list = new Student[ArraySizeSlider.SIZE];
+                Student[] list = new Student[arraySize];
                 RandomArray<Student> randomArray = new RandomArray<>(new Student());
                 randomArray.generateRandomArray(list);
-                this.list = list;
+                barLabels = new BarLabels(list, selectedDataTypeIndex);
                 GetBarHeights<Student> BarHeights = new GetBarHeights<>();
                 barHeights = BarHeights.get(list);
-                GetSortThread<Student> getSortThread = new GetSortThread<Student>(list, sync);
+                GetSortThread<Student> getSortThread = new GetSortThread<Student>(selectedAlgorithmIndex, list, sync);
                 t = new Thread(getSortThread.get());
                 break;
             }
 
             default:
             {
-                Integer[] list = new Integer[ArraySizeSlider.SIZE];
+                Integer[] list = new Integer[arraySize];
                 RandomArray<Integer> randomArray = new RandomArray<>(new RandomInteger());
                 randomArray.generateRandomArray(list);
-                this.list = list;
+                barLabels = new BarLabels(list, selectedDataTypeIndex);
                 GetBarHeights<Integer> BarHeights = new GetBarHeights<>();
                 barHeights = BarHeights.get(list);
-                GetSortThread<Integer> getSortThread = new GetSortThread<Integer>(list, sync);
+                GetSortThread<Integer> getSortThread = new GetSortThread<Integer>(selectedAlgorithmIndex, list, sync);
                 t = new Thread(getSortThread.get());
                 break;
             }
