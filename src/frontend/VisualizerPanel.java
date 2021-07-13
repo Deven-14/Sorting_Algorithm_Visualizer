@@ -1,5 +1,7 @@
 package frontend;
 
+import java.io.File;
+import java.io.IOException;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -11,9 +13,13 @@ import java.awt.BasicStroke;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 
 import datastructure.Sync;
-import input.Student;
 import datastructure.Pair;
 import backend.BarLabels;
 import backend.GetRequiredData;
@@ -41,6 +47,10 @@ class VisualizerPanel extends JPanel{
     DataTypeComboBox dataTypeComboBox;
     AlgorithmComboBox algorithmComboBox;
     ArraySizeSlider arraySizeSlider;
+
+    File audioFile;
+    AudioInputStream audioStream;
+    Clip clip;
 
     VisualizerPanel(DataTypeComboBox dataTypeComboBox, AlgorithmComboBox algorithmComboBox, ArraySizeSlider arraySizeSlider)
     {
@@ -81,7 +91,7 @@ class VisualizerPanel extends JPanel{
     //             return ((Integer)o).toString();
     //     }
     // }
-
+    
     @Override
     public void paintComponent (Graphics g) {
         
@@ -165,6 +175,21 @@ class VisualizerPanel extends JPanel{
                     
             }
 
+            try {
+                audioFile = new File(getClass().getClassLoader().getResource("media/beepAudio.wav").getFile());
+                audioStream = AudioSystem.getAudioInputStream(audioFile);
+                clip = AudioSystem.getClip();
+                clip.open(audioStream);
+            } catch (IOException er) {
+                System.err.println(er.getMessage());
+            } catch (LineUnavailableException er) {
+                System.err.println(er.getMessage());
+            } catch (UnsupportedAudioFileException er) {
+                System.err.println(er.getMessage());
+            } catch (NullPointerException er) {
+                System.err.println(er.getMessage());
+            }
+
             startSortButton.setEnabled(false);
             dataTypeComboBox.setEnabled(false);
             algorithmComboBox.setEnabled(false);
@@ -172,9 +197,7 @@ class VisualizerPanel extends JPanel{
 
             t1.start();
             timer.start();
-
-        }
-        
+        }      
     }
 
     private class SortAnElement implements ActionListener
@@ -185,12 +208,30 @@ class VisualizerPanel extends JPanel{
             comparedIndices = sync.receive((indexPair) -> { 
                 //System.out.println(indexPair.first + ", " + indexPair.second);
                 repaint();
+                try {
+                    clip.setFramePosition(0);
+                    clip.start(); 
+                }
+                catch(NullPointerException er) {
+                    System.err.println(er);
+                }                
             });
             
             if(sync.isCompleted)
             {
                 timer.stop();
-                Timer timer2 = new Timer(1000, e1 -> repaint());//last swap, coz we are showing which to swap and then swapping
+                Timer timer2 = new Timer(1000, e1 -> {
+                    repaint(); //last swap, coz we are showing which to swap and then swapping
+                    try {
+                        clip.setFramePosition(0);
+                        clip.start();
+                        // while(clip.getMicrosecondLength() != clip.getMicrosecondPosition()) {}
+                        clip.close();
+                    }
+                    catch(NullPointerException er) {
+                        System.err.println(er);
+                    }         
+                });
                 timer2.setRepeats(false);
                 timer2.start();
                 startSortButton.setEnabled(true);
