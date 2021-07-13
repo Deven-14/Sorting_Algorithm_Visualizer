@@ -160,8 +160,9 @@ class VisualizerPanel extends JPanel{
         @Override
         public void actionPerformed(ActionEvent e) {
             
-            comparedIndices = sync.receive((indexPair) -> { 
+            sync.receive((indexPair) -> { 
                 //System.out.println(indexPair.first + ", " + indexPair.second);
+                comparedIndices.set(indexPair);
                 repaint();              
             });
             

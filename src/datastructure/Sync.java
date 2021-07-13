@@ -38,7 +38,7 @@ public class Sync {
     }
 
 
-    public synchronized Pair receive(Consumer<Pair> callback)
+    public synchronized void receive(Consumer<Pair> callback)
     {
 
         while(transfer)
@@ -55,7 +55,7 @@ public class Sync {
         callback.accept(comparedIndices);
 
         notify();
-        return (new Pair(comparedIndices.first, comparedIndices.second));
+        //return (new Pair(comparedIndices.first, comparedIndices.second));
     }
 
 }
