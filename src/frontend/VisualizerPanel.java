@@ -1,7 +1,5 @@
 package frontend;
 
-import java.io.File;
-import java.io.IOException;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -13,11 +11,6 @@ import java.awt.BasicStroke;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 
 import datastructure.Sync;
 import datastructure.Pair;
@@ -48,10 +41,6 @@ class VisualizerPanel extends JPanel{
     AlgorithmComboBox algorithmComboBox;
     ArraySizeSlider arraySizeSlider;
 
-    File audioFile;
-    AudioInputStream audioStream;
-    Clip clip;
-
     VisualizerPanel(DataTypeComboBox dataTypeComboBox, AlgorithmComboBox algorithmComboBox, ArraySizeSlider arraySizeSlider)
     {
         this.maxBarHeight = 100; // default range 1 - 1000
@@ -60,39 +49,18 @@ class VisualizerPanel extends JPanel{
         this.algorithmComboBox = algorithmComboBox;
         this.arraySizeSlider = arraySizeSlider;
 
-        sync = null;
-        comparedIndices = new Pair(0, 0);
+        sync = null;//imp****
+        comparedIndices = null;//imp*****
+        //all data has to be initialized at startSort and not here, coz, it can affect when we click start again, the data of the before sort gets affected here
         
-        audioFile = new File(getClass().getClassLoader().getResource("media/beepAudio.wav").getFile());
         startSortButton = new JButton("Start");
         startSortButton.addActionListener(new StartSort());
         timer = new Timer(1000, new SortAnElement());
         
         this.add(startSortButton);
     }
-
-    // String getStringValue(Object o)
-    // {
-
-    //     switch(requiredData.getSelectedDataTypeIndex())
-    //     {
-    //         case DataTypeComboBox.INTEGER_TYPE:
-    //             return ((Integer)o).toString();
-    //         case DataTypeComboBox.FLOAT_TYPE:
-    //             return ((Float)o).toString();
-    //         case DataTypeComboBox.DOUBLE_TYPE:
-    //             return String.format("%.4f",((Double)o).toString());
-    //         case DataTypeComboBox.CHARACTER_TYPE:
-    //             return ((Character)o).toString();
-    //         case DataTypeComboBox.STRING_TYPE:
-    //             return ((String)o);
-    //         case DataTypeComboBox.STUDENT_TYPE:
-    //             return ((Student)o).toString();
-    //         default:
-    //             return ((Integer)o).toString();
-    //     }
-    // }
     
+
     @Override
     public void paintComponent (Graphics g) {
         
@@ -117,7 +85,7 @@ class VisualizerPanel extends JPanel{
                 g2d.setStroke(new BasicStroke(5));//line size
                 g2d.drawRect(bars[i][0], bars[i][1], bars[i][2], bars[i][3]);
             } 
-        }
+        } 
 
         if(requiredData.getSelectedAlgorithmIndex() != AlgorithmComboBox.MERGE_SORT && requiredData.getSelectedAlgorithmIndex() != AlgorithmComboBox.INSERTION_SORT)
             swap(index1, index2);
@@ -161,6 +129,7 @@ class VisualizerPanel extends JPanel{
 
             sync = requiredData.getSync();
             barLabels = requiredData.getBarLabels();
+            comparedIndices = new Pair(0, 0);
 
             barHeights = requiredData.getBarHeigths();
             bars = new Integer[barHeights.length][4];
@@ -175,21 +144,6 @@ class VisualizerPanel extends JPanel{
                 bars[i][3] = (barHeights[i] * PANEL_HEIGHT) / maxBarHeight;
                     
             }
-
-            try {
-                audioStream = AudioSystem.getAudioInputStream(audioFile);
-                clip = AudioSystem.getClip();
-                clip.open(audioStream);
-            } catch (IOException er) {
-                System.err.println(er.getMessage());
-            } catch (LineUnavailableException er) {
-                System.err.println(er.getMessage());
-            } catch (NullPointerException er) {
-                System.err.println(er.getMessage());
-            } catch (UnsupportedAudioFileException er) {
-                System.err.println(er.getMessage());
-            }
-            
 
             startSortButton.setEnabled(false);
             dataTypeComboBox.setEnabled(false);
@@ -208,33 +162,19 @@ class VisualizerPanel extends JPanel{
             
             comparedIndices = sync.receive((indexPair) -> { 
                 //System.out.println(indexPair.first + ", " + indexPair.second);
-                repaint();
-                try {
-                    clip.setMicrosecondPosition(0);
-                    clip.start(); 
-                }
-                catch(NullPointerException er) {
-                    System.err.println(er);
-                }                
+                repaint();              
             });
             
             if(sync.isCompleted)
             {
                 timer.stop();
                 Timer timer2 = new Timer(1000, e1 -> {
-                    repaint(); //last swap, coz we are showing which to swap and then swapping
-                    try {
-                        clip.setMicrosecondPosition(0);
-                        clip.start();
-                        // while(clip.getMicrosecondLength() != clip.getMicrosecondPosition()) {}
-                        clip.close();
-                    }
-                    catch(NullPointerException er) {
-                        System.err.println(er);
-                    }         
+                    repaint(); //last swap, coz we are showing which to swap and then swapping        
                 });
+                
                 timer2.setRepeats(false);
                 timer2.start();
+                
                 startSortButton.setEnabled(true);
                 dataTypeComboBox.setEnabled(true);//coz as we change this during a running sorting process, it'll call repaint most probably and the sorting is not going properly
                 algorithmComboBox.setEnabled(true);
@@ -246,28 +186,4 @@ class VisualizerPanel extends JPanel{
         
     }
 
-
-    // private class MoveAnElement implements ActionListener
-    // {
-
-    //     @Override
-    //     public void actionPerformed(ActionEvent e) {
-            
-    //         if(bars[comparedIndices.first][0] == x2 && bars[comparedIndices.second][0] == x1)
-    //             timer2.stop();
-
-    //         if(bars[comparedIndices.first][0] < x2)
-    //             bars[comparedIndices.first][0] += 1;
-    //         else if(bars[comparedIndices.first][0] > x2)
-    //             bars[comparedIndices.first][0] -= 1;
-            
-    //         if(bars[comparedIndices.second][0] < x1)
-    //             bars[comparedIndices.second][0] += 1;
-    //         else if(bars[comparedIndices.second][0] > x1)
-    //             bars[comparedIndices.second][0] -= 1;
-            
-    //         repaint();
-    //     }
-        
-    // }
 }
