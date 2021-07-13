@@ -62,7 +62,8 @@ class VisualizerPanel extends JPanel{
 
         sync = null;
         comparedIndices = new Pair(0, 0);
-
+        
+        audioFile = new File(getClass().getClassLoader().getResource("media/beepAudio.wav").getFile());
         startSortButton = new JButton("Start");
         startSortButton.addActionListener(new StartSort());
         timer = new Timer(1000, new SortAnElement());
@@ -176,7 +177,6 @@ class VisualizerPanel extends JPanel{
             }
 
             try {
-                audioFile = new File(getClass().getClassLoader().getResource("media/beepAudio.wav").getFile());
                 audioStream = AudioSystem.getAudioInputStream(audioFile);
                 clip = AudioSystem.getClip();
                 clip.open(audioStream);
@@ -184,11 +184,12 @@ class VisualizerPanel extends JPanel{
                 System.err.println(er.getMessage());
             } catch (LineUnavailableException er) {
                 System.err.println(er.getMessage());
-            } catch (UnsupportedAudioFileException er) {
-                System.err.println(er.getMessage());
             } catch (NullPointerException er) {
                 System.err.println(er.getMessage());
+            } catch (UnsupportedAudioFileException er) {
+                System.err.println(er.getMessage());
             }
+            
 
             startSortButton.setEnabled(false);
             dataTypeComboBox.setEnabled(false);
@@ -209,7 +210,7 @@ class VisualizerPanel extends JPanel{
                 //System.out.println(indexPair.first + ", " + indexPair.second);
                 repaint();
                 try {
-                    clip.setFramePosition(0);
+                    clip.setMicrosecondPosition(0);
                     clip.start(); 
                 }
                 catch(NullPointerException er) {
@@ -223,7 +224,7 @@ class VisualizerPanel extends JPanel{
                 Timer timer2 = new Timer(1000, e1 -> {
                     repaint(); //last swap, coz we are showing which to swap and then swapping
                     try {
-                        clip.setFramePosition(0);
+                        clip.setMicrosecondPosition(0);
                         clip.start();
                         // while(clip.getMicrosecondLength() != clip.getMicrosecondPosition()) {}
                         clip.close();
