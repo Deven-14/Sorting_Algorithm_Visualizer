@@ -17,13 +17,22 @@ import datastructure.Pair;
 import backend.BarLabels;
 import backend.GetRequiredData;
 
+import java.io.File;
+import java.io.IOException;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+
+
 class VisualizerPanel extends JPanel{
 
     final int PANEL_WIDTH = 800;
     final int PANEL_HEIGHT = 475;
 
     Integer[] barHeights;
-    Integer[][] bars = null;
+    Integer[][] bars;
     int maxBarHeight;
     int rect_width;
 
@@ -33,13 +42,18 @@ class VisualizerPanel extends JPanel{
     Timer timer;
 
     Sync sync;   
-    Thread t1;
+    Thread sortThread;
     GetRequiredData requiredData;
     BarLabels barLabels;
+    boolean isSorting;
 
     DataTypeComboBox dataTypeComboBox;
     AlgorithmComboBox algorithmComboBox;
     ArraySizeSlider arraySizeSlider;
+
+    File audioFile;
+    AudioInputStream audioStream;
+    Clip clip;
 
     VisualizerPanel(DataTypeComboBox dataTypeComboBox, AlgorithmComboBox algorithmComboBox, ArraySizeSlider arraySizeSlider)
     {
@@ -49,10 +63,18 @@ class VisualizerPanel extends JPanel{
         this.algorithmComboBox = algorithmComboBox;
         this.arraySizeSlider = arraySizeSlider;
 
+        sortThread = null;
+        requiredData = null;
         sync = null;//imp****
         comparedIndices = null;//imp*****
+        isSorting = false;
+        bars = null;
+        barLabels = null;
+        barHeights = null;
         //all data has to be initialized at startSort and not here, coz, it can affect when we click start again, the data of the before sort gets affected here
         
+        audioFile = new File("res/beepAudio.wav");
+
         startSortButton = new JButton("Start");
         startSortButton.addActionListener(new StartSort());
         timer = new Timer(1000, new SortAnElement());
@@ -67,11 +89,19 @@ class VisualizerPanel extends JPanel{
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        if(bars == null)
+        if(isSorting == false)
             return;
 
         int index1 = comparedIndices.first;
         int index2 = comparedIndices.second;
+
+        try {
+            clip.setMicrosecondPosition(0);
+            clip.start(); 
+        }
+        catch(NullPointerException er) {
+            System.err.println(er);
+        }
 
         for (int i = 0; i < bars.length; i++ ) {
             g2d.setPaint(Color.darkGray);
@@ -125,11 +155,12 @@ class VisualizerPanel extends JPanel{
         public void actionPerformed(ActionEvent e) {
 
             requiredData = new GetRequiredData(dataTypeComboBox.getSelectedIndex(), algorithmComboBox.getSelectedIndex(), arraySizeSlider.getValue());
-            t1 = requiredData.getSortThread();
+            sortThread = requiredData.getSortThread();
 
             sync = requiredData.getSync();
             barLabels = requiredData.getBarLabels();
             comparedIndices = new Pair(0, 0);
+            isSorting = true;
 
             barHeights = requiredData.getBarHeigths();
             bars = new Integer[barHeights.length][4];
@@ -145,12 +176,30 @@ class VisualizerPanel extends JPanel{
                     
             }
 
+
+            try {
+
+                audioStream = AudioSystem.getAudioInputStream(audioFile);
+                clip = AudioSystem.getClip();
+                clip.open(audioStream);
+
+            } catch (IOException er) {
+                System.err.println(er.getMessage());
+            } catch (LineUnavailableException er) {
+                System.err.println(er.getMessage());
+            } catch (NullPointerException er) {
+                System.err.println(er.getMessage());
+            } catch (UnsupportedAudioFileException er) {
+                System.err.println(er.getMessage());
+            }
+
+
             startSortButton.setEnabled(false);
             dataTypeComboBox.setEnabled(false);
             algorithmComboBox.setEnabled(false);
             arraySizeSlider.setEnabled(false);
 
-            t1.start();
+            sortThread.start();
             timer.start();
         }      
     }
@@ -175,12 +224,44 @@ class VisualizerPanel extends JPanel{
                 
                 timer2.setRepeats(false);
                 timer2.start();
+
+                Timer timer3 = new Timer(3000, new SortingCompleted());
+
+                timer3.setRepeats(false);
+                timer3.start();
                 
-                startSortButton.setEnabled(true);
-                dataTypeComboBox.setEnabled(true);//coz as we change this during a running sorting process, it'll call repaint most probably and the sorting is not going properly
-                algorithmComboBox.setEnabled(true);
-                arraySizeSlider.setEnabled(true);
-                //System.out.println(t1.isAlive());
+                //System.out.println(sortThread.isAlive());
+            }
+            
+        }
+        
+    }
+
+    private class SortingCompleted implements ActionListener
+    {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            startSortButton.setEnabled(true);
+            dataTypeComboBox.setEnabled(true);//coz as we change this during a running sorting process, it'll call repaint most probably and the sorting is not going properly
+            algorithmComboBox.setEnabled(true);
+            arraySizeSlider.setEnabled(true);
+
+            sortThread = null;
+            requiredData = null;
+            sync = null;//imp****
+            comparedIndices = null;//imp*****
+            isSorting = false;
+            bars = null;
+            barLabels = null;
+            barHeights = null;
+
+            try {
+                clip.close();
+            }
+            catch(NullPointerException er) {
+                System.err.println(er);
             }
             
         }
