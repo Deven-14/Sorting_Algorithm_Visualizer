@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.BasicStroke;
+import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -57,7 +58,10 @@ class VisualizerPanel extends JPanel{
 
     VisualizerPanel(DataTypeComboBox dataTypeComboBox, AlgorithmComboBox algorithmComboBox, ArraySizeSlider arraySizeSlider)
     {
-        this.maxBarHeight = 100; // default range 1 - 1000
+
+        this.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        this.maxBarHeight = 50;
 
         this.dataTypeComboBox = dataTypeComboBox;
         this.algorithmComboBox = algorithmComboBox;
@@ -104,16 +108,16 @@ class VisualizerPanel extends JPanel{
         }
 
         for (int i = 0; i < bars.length; i++ ) {
-            g2d.setPaint(Color.darkGray);
+            g2d.setPaint(new Color(0x46525e));
             g2d.fillRect(bars[i][0], bars[i][1], bars[i][2], bars[i][3]);
             g2d.setPaint(Color.black);
-            g2d.setFont(new Font(null, Font.BOLD, 25));
-            g2d.drawString(barLabels.at(i), bars[i][0], bars[i][1]);
+            g2d.setFont(new Font(null, Font.BOLD, 20));
+            g2d.drawString(barLabels.at(i), bars[i][0], bars[i][1] - 5);
             if((i == index1 || i == index2) && index1 != index2)
             {
-                g2d.setPaint(Color.RED);
+                g2d.setPaint(new Color(0x40E0D0));
                 g2d.setStroke(new BasicStroke(5));//line size
-                g2d.drawRect(bars[i][0], bars[i][1], bars[i][2], bars[i][3]);
+                g2d.drawRect(bars[i][0] + 3, bars[i][1], bars[i][2] - 5, bars[i][3] - 5);
             } 
         } 
 
@@ -210,7 +214,6 @@ class VisualizerPanel extends JPanel{
         public void actionPerformed(ActionEvent e) {
             
             sync.receive((indexPair) -> { 
-                //System.out.println(indexPair.first + ", " + indexPair.second);
                 comparedIndices.set(indexPair);
                 repaint();              
             });

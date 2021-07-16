@@ -1,5 +1,6 @@
 package frontend;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
@@ -9,11 +10,9 @@ import javax.swing.JPanel;
 
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Container;
-//import java.awt.event.ActionEvent;
-//import java.awt.event.ActionListener;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 
 public class MainWindow extends JFrame{
@@ -21,16 +20,18 @@ public class MainWindow extends JFrame{
     final int WIDTH = 1000;
     final int HEIGHT = WIDTH * 9 / 16;
     JMenuBar menuBar;
-    JMenu aboutMenu;
+    JMenu fileMenu;
     JMenu helpMenu;
     JMenu algorithmMenu;
+    JMenuItem newWindow;
+    JMenuItem about;
     JMenuItem selectionSortItem;
     JMenuItem bubbleSortItem;
     JMenuItem quickSortItem;
     JMenuItem mergeSortItem;
     JPanel toolBarPanel;
     VisualizerPanel mainPanel;
-    JPanel sidePanel;
+    SidePanel sidePanel;
     DataTypeComboBox dataTypeComboBox;
     AlgorithmComboBox algorithmComboBox;
     ArraySizeSlider arraySizeSlider;
@@ -39,21 +40,70 @@ public class MainWindow extends JFrame{
     JLabel sizeLabel;
     Container contentPane;
 
-    public MainWindow (String title)//, Sync sync, Integer[] h) {
-    {
+    JPanel aboutPanel;
+    JLabel aboutLabel;
+    JButton returnToMainPanel;
 
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public MainWindow (String title)
+    {
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        }
+        catch (UnsupportedLookAndFeelException e) {
+            System.err.println(e.getMessage());
+        }
+        catch (ClassNotFoundException e) {
+            System.err.println(e.getMessage());
+        }
+        catch (InstantiationException e) {
+            System.err.println(e.getMessage());
+        }
+        catch (IllegalAccessException e) {
+            System.err.println(e.getMessage());
+        }
+
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//EXIT_ON_CLOSE);
         this.setTitle(title);
         this.setSize(WIDTH, HEIGHT);
-        //heights = h;
         
         menuBar = new JMenuBar();
-        aboutMenu = new JMenu("About");
+
+        fileMenu = new JMenu("File");
+        newWindow = new JMenuItem("New Window");
+        newWindow.addActionListener( e -> {
+            new MainWindow("Sorting Algorithm Visualizer");
+        });
+
+        fileMenu.add(newWindow);
+
         helpMenu = new JMenu("Help");
+        about = new JMenuItem("About");
+        about.addActionListener(e -> {
+
+            mainPanel.setVisible(false);
+
+            aboutPanel = new JPanel();
+            aboutPanel.setLayout(new FlowLayout());
+            aboutLabel = new JLabel("hello");
+
+            getContentPane().add(aboutPanel, BorderLayout.CENTER);     
+            
+            returnToMainPanel = new JButton("Close About");
+            returnToMainPanel.addActionListener( e1 -> {
+                aboutPanel.setVisible(false);
+                mainPanel.setVisible(true);
+            });
+
+            aboutPanel.add(aboutLabel);
+            aboutPanel.add(returnToMainPanel);
+
+            aboutPanel.setVisible(true);
+        });
+
+        helpMenu.add(about);
         
-        menuBar.add(aboutMenu);
+        menuBar.add(fileMenu);
         menuBar.add(helpMenu);
-        // menuBar.add(Box.createHorizontalGlue());
 
         this.setJMenuBar(menuBar);
         
@@ -71,6 +121,9 @@ public class MainWindow extends JFrame{
         toolBarPanel.add(algorithmLabel);
         algorithmComboBox = new AlgorithmComboBox();
         toolBarPanel.add(algorithmComboBox);
+        algorithmComboBox.addActionListener( (e) -> {
+            sidePanel.stateChange(algorithmComboBox.getSelectedIndex());
+        });
 
         sizeLabel = new JLabel();
         toolBarPanel.add(sizeLabel);
@@ -81,12 +134,8 @@ public class MainWindow extends JFrame{
         sizeLabel.setText("size = " + arraySizeSlider.getValue());
         toolBarPanel.add(arraySizeSlider);
         
-        sidePanel = new JPanel();
-        sidePanel.setPreferredSize(new Dimension(200, 200));
-        sidePanel.setBackground(Color.white);
-        
+        sidePanel = new SidePanel();
         mainPanel = new VisualizerPanel(dataTypeComboBox, algorithmComboBox, arraySizeSlider);
-        // mainPanel.setPreferredSize(new Dimension(500, 500)); // 800, 800 * 9 / 16
         
         getContentPane().add(toolBarPanel, BorderLayout.NORTH);
         getContentPane().add(mainPanel, BorderLayout.CENTER);

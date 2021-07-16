@@ -66,9 +66,6 @@ public class GetRequiredData {
                 RandomArray<Integer> randomArray = new RandomArray<>(new RandomInteger());
                 randomArray.generateRandomArray(list);
                 barLabels = new BarLabels(list, selectedDataTypeIndex);
-                // for(Integer a : list)
-                //     System.out.print(a + ", ");
-                // System.out.println();
                 GetBarHeights<Integer> BarHeights = new GetBarHeights<>();
                 barHeights = BarHeights.get(list);
                 GetSortThread<Integer> getSortThread = new GetSortThread<Integer>(selectedAlgorithmIndex, list, sync);
@@ -158,18 +155,5 @@ public class GetRequiredData {
 
         return t;
     }
-
-    // public static void main(String[] args)
-    // {
-    //     GetRequiredData getRequiredData = new GetRequiredData();
-    //     System.out.println("thread" + getRequiredData.getSortThread());
-    //     Integer[] arr = getRequiredData.getBarHeigths();
-    //     for(Integer a : arr)
-    //         System.out.print(a + ", ");
-    //     System.out.println();
-    //     Sync sy = getRequiredData.getSync();
-    //     System.out.println(sy);
-
-    // }
 
 }

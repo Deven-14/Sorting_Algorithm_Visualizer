@@ -55,7 +55,6 @@ public class Sync {
         callback.accept(comparedIndices);
 
         notify();
-        //return (new Pair(comparedIndices.first, comparedIndices.second));
     }
 
 }

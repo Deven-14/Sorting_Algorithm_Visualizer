@@ -34,36 +34,5 @@ public class RandomArray<T> {
         }
 
     }
-    
-    /*public static void main(String[] args)
-    {
-        Integer[] i = new Integer[20];
-        RandomArray<Integer> n1 = new RandomArray<Integer>(new RandomInteger());
-        n1.generateRandomArray(i);
-        for(Integer n2 : i)
-            System.out.print(n2 +", ");
-        System.out.println();
-
-        Character[] c = new Character[20];
-        RandomArray<Character> n3 = new RandomArray<Character>(new RandomCharacter());
-        n3.generateRandomArray(c);
-        for(Character n4 : c)
-            System.out.print(n4 +", ");
-        System.out.println();
-
-        String[] s = new String[20];
-        RandomArray<String> n5 = new RandomArray<String>(new RandomString());
-        n5.generateRandomArray(s);
-        for(String n6 : s)
-            System.out.print(n6 +", ");
-        System.out.println();
-
-        Student[] s2 = new Student[20];
-        RandomArray<Student> n7 = new RandomArray<Student>(new Student());
-        n7.generateRandomArray(s2);
-        for(Student n8 : s2)
-            System.out.print(n8 +", ");
-        System.out.println();
-    }*/
 
 }
