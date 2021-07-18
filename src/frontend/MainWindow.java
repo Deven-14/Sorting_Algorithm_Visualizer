@@ -7,8 +7,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import javax.swing.UIManager;
@@ -41,7 +43,7 @@ public class MainWindow extends JFrame{
     Container contentPane;
 
     JPanel aboutPanel;
-    JLabel aboutLabel;
+    JTextArea aboutLabel;
     JButton returnToMainPanel;
 
     public MainWindow (String title)
@@ -83,16 +85,20 @@ public class MainWindow extends JFrame{
             mainPanel.setVisible(false);
 
             aboutPanel = new JPanel();
-            aboutPanel.setLayout(new FlowLayout());
-            aboutLabel = new JLabel("hello");
-
-            getContentPane().add(aboutPanel, BorderLayout.CENTER);     
+            aboutPanel.setLayout(new FlowLayout());     
             
-            returnToMainPanel = new JButton("Close About");
+            returnToMainPanel = new JButton("Close");
             returnToMainPanel.addActionListener( e1 -> {
                 aboutPanel.setVisible(false);
                 mainPanel.setVisible(true);
             });
+
+            String description = "A tool with a graphical user interface to visualize the working of various popular sorting algorithms like \nBubble sort, Selection sort, Insertion sort, Merge sort, Heap sort, Quick sort and 3 way Quick sort \nwith the user being able to choose the input size, input data type and sorting algorithm.";
+            aboutLabel = new JTextArea(description);
+            aboutLabel.setFont(new Font(null, Font.PLAIN, 17));
+            aboutLabel.setEditable(false);
+
+            getContentPane().add(aboutPanel, BorderLayout.CENTER);
 
             aboutPanel.add(aboutLabel);
             aboutPanel.add(returnToMainPanel);

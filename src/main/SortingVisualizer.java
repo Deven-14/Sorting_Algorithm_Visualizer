@@ -3,7 +3,7 @@ package main;
 import frontend.MainWindow;
 
 
-public class Main {
+public class SortingVisualizer {
 
     public static void main(String[] args) 
     {
